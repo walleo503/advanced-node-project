@@ -11,20 +11,19 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 app.set('view engine', 'pug');
 app.set('views', './views/pug');
 
+
+app.route('/').get((req, res) => {
+  res.render('index');
+});
+
 myDB(async (client) => {
   const myDataBase = await client.db('database').collection('users');
-
-  app.route('/').get((req, res) => {
-    res.render('index');
-  });
-
 }).catch((e) => {
-  app.route('/').get((req, res) => {
-    res.render('index');
-  });
+  console.log('DB Error: ' + e);
 });
 
 const PORT = process.env.PORT || 3000;
